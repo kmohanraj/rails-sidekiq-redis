@@ -1,5 +1,5 @@
 ## Redis Sidekiq
-######### http://blog.magmalabs.io/2018/09/25/dealing-first-scheduled-background-job.html
+###### http://blog.magmalabs.io/2018/09/25/dealing-first-scheduled-background-job.html
 create rails app
 
 ```

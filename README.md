@@ -1,24 +1,91 @@
-# README
+## Redis Sidekiq
+######### http://blog.magmalabs.io/2018/09/25/dealing-first-scheduled-background-job.html
+create rails app
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+```
 
-Things you may want to cover:
+rails new rails-sidekiq-redis
 
-* Ruby version
+```
 
-* System dependencies
+THEN add gem to gemfile,
+```
 
-* Configuration
+gem 'redis-rails'
+gem 'sidekiq'
 
-* Database creation
+```
+THEN bundle install
 
-* Database initialization
 
-* How to run the test suite
+ADD to config/application.rb
+```
 
-* Services (job queues, cache servers, search engines, etc.)
+config.cache_store = :redis_store, "redis://localhost:6379/0/cache", { expires_in: 90.minutes }
 
-* Deployment instructions
+```
 
-* ...
+ADD to routes,
+
+```
+
+
+require 'sidekiq/web'
+
+Rails.application.routes.draw do
+  mount Sidekiq::Web => '/sidekiq'
+end
+
+
+```
+
+THEN , See the Sidekiq Dashboard,
+
+```
+
+http://localhost:3000/sidekiq
+
+```
+
+THEN create worker,
+
+sample is worker name,
+```
+
+rails g sidekiq:worker sample
+
+```
+
+THEN see the workers/sample_worker.rb
+```
+
+class SampleWorker
+  include Sidekiq::Worker
+
+  def perform(*args)
+    puts "Am Ruby and Elixir Watcher"
+  end
+end
+
+
+```
+
+BEFORE start redis server,
+
+```
+
+redis-server
+
+```
+
+THEN RUN your job into rails console,
+```
+
+SampleWorker.perform_async
+
+```
+
+
+
+
+
